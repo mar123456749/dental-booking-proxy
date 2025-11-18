@@ -28,8 +28,12 @@ export default async function handler(req, res) {
       metadata: {},
       responses: {
         name: data['responses.name'] || data.name,
-        email: data['responses.email'] || data.email,
-        phone: data['responses.phone'] || data['responses.phon'] || data.phone
+        email: (data['responses.email'] === 'null' || !data['responses.email'] || data['responses.email'] === null) 
+               ? 'appointments@dental-clinic.com' 
+               : data['responses.email'] || data.email,
+        phone: (data['responses.phone'] === 'null' || data['responses.phone'] === null) 
+               ? undefined 
+               : (data['responses.phone'] || data['responses.phon'] || data.phone)
       }
     };
 
