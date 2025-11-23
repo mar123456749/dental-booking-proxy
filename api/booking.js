@@ -72,10 +72,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing client email' });
     }
 
-    // Validate date format
+    // Validate date format and fix year if needed
     if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(calcomPayload.start)) {
       console.log('❌ Invalid date format:', calcomPayload.start);
       return res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DDTHH:MM:SS.000Z' });
+    }
+
+    // Fix year if agent sent 2024 instead of 2025
+    if (calcomPayload.start.startsWith('2024-')) {
+      console.log('🔧 Fixing year from 2024 to 2025:', calcomPayload.start);
+      calcomPayload.start = calcomPayload.start.replace('2024-', '2025-');
+      console.log('🔧 Corrected date:', calcomPayload.start);
     }
 
     console.log('📤 Sending to Cal.com:', JSON.stringify(calcomPayload, null, 2));
